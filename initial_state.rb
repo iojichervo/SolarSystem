@@ -14,11 +14,9 @@ def generate_planets
   planets_mass = SUN_MASS / N.to_f
 
   N.times do
-    #vx = rand(-0.1..0.1)
-    #vy = rand(-0.1..0.1)
-    vx = 0
-    vy = 0
-    new_particle = Planet.new(R, planets_mass, random_position(particles), vx, vy)
+    position = random_position
+    velocity = transform_tangential_velocity(5, position)
+    new_particle = Planet.new(R, planets_mass, position, velocity[0], velocity[1])
     particles.add(new_particle)
   end
 
@@ -26,10 +24,26 @@ def generate_planets
 end
 
 # Return a new position for a new planet
-def random_position(particles)
+def random_position
   random_angle = rand(0..2*Math::PI)
   random_distance = rand(MIN_DISTANCE_SUN..MAX_DISTANCE_SUN.to_f)
   x = random_distance * Math.cos(random_angle)
   y = random_distance * Math.sin(random_angle)
   return Point.new(x, y)
 end
+
+=begin
+# Tangential velocity in x and y
+def transform_tangential_velocity(vt, position)
+  theta = Math.atan2(position.y, position.x)
+  alpha = (Math::PI / 2) - theta
+  vx = vt * Math.cos(alpha)
+  vy = vt * Math.sin(alpha)
+
+  error = 0.00001
+  vx = 0 if vx.abs < error
+  vy = 0 if vy.abs < error
+
+  return [vx, vy]
+end
+=end
