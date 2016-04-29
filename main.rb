@@ -7,13 +7,13 @@ def simulation
   print_next_state(planets, 'w', 0)
 
   actual_time = 0
-  i = 0
-  while i < FRAMES do
-    move(planets, 0.1)
-    actual_time += 0.1
+  while actual_time < SIMULATION_END_TIME do
+    move(planets, SIMULATION_DELTA_TIME)
+    actual_time += SIMULATION_DELTA_TIME
 
-    print_next_state(planets, 'a', actual_time)
-    i += 1
+    if ((next_frame(actual_time)*10) / (FRAME_DELTA_TIME*10)) % 1 == 0 then # To avoid float error
+      print_next_state(planets, 'a', next_frame(actual_time))
+    end
   end
 end
 
@@ -22,6 +22,11 @@ def move(planets, time)
   planets.each do |p|
     p.move(time) if p.id != 0
   end
+end
+
+# Returns the next frame of a certain time
+def next_frame(time)
+  return (time.round(1) - time > 0 ? time.round(1) : time.round(1) + FRAME_DELTA_TIME).round(1)
 end
 
 # Prints each planet at a given time
@@ -47,6 +52,9 @@ SUN_MASS = 2*(10**30)
 G = 6.693*(10**-11)
 MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
-FRAMES = 100
+SIMULATION_DELTA_TIME = 0.1
+SIMULATION_END_TIME = 5
+K = 1
+FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 
 simulation
