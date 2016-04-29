@@ -56,8 +56,8 @@ class Planet
 
     f_new = force
     a_new = angle
-    @vx = @vx + (time/2*mass)*(f*Math.cos(a_new) + f_new*Math.cos(a_new))
-    @vy = @vy + (time/2*mass)*(f*Math.sin(a_new) + f_new*Math.sin(a_new))
+    @vx = @vx + (time/(2*mass))*(f*Math.cos(a) + f_new*Math.cos(a_new))
+    @vy = @vy + (time/(2*mass))*(f*Math.sin(a) + f_new*Math.sin(a_new))
   end
 
   def force

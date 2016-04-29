@@ -33,6 +33,7 @@ def random_position
   return Point.new(x, y)
 end
 
+# Returns the tangential velocity of the planet based on a common angular momentum
 def initial_velocity(angular_momentum, position, mass)
   v = angular_momentum / (position.distance_to_origin * mass)
 
@@ -43,19 +44,3 @@ def initial_velocity(angular_momentum, position, mass)
 
   return tangent
 end
-
-=begin
-# Tangential velocity in x and y
-def transform_tangential_velocity(vt, position)
-  theta = Math.atan2(position.y, position.x)
-  alpha = (Math::PI / 2) - theta
-  vx = vt * Math.cos(alpha)
-  vy = vt * Math.sin(alpha)
-
-  error = 0.00001
-  vx = 0 if vx.abs < error
-  vy = 0 if vy.abs < error
-
-  return [vx, vy]
-end
-=end
