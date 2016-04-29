@@ -24,4 +24,14 @@ class Point
   def distance_to(other_point)
     Math.hypot((@x - other_point.x), (@y - other_point.y))
   end
+
+  def distance_to_origin
+    distance_to(Point.new(0, 0))
+  end
+
+  def multiply(val)
+    @x * val
+    @y * val
+    return self
+  end
 end

@@ -50,16 +50,18 @@ class Planet
   # Movement made using Velocity-Verlet algorithm
   def move(time)
     f = force
-    @position.x = @position.x + time * @vx + (time**2/mass) * f * Math.cos(angle)
-    @position.y = @position.y + time * @vy + (time**2/mass) * f * Math.sin(angle)
+    a = angle
+    @position.x = @position.x + time * @vx + (time**2/mass) * f * Math.cos(a)
+    @position.y = @position.y + time * @vy + (time**2/mass) * f * Math.sin(a)
 
     f_new = force
-    @vx = @vx + (time/2*mass)*(f*Math.cos(angle) + f_new*Math.cos(angle))
-    @vy = @vy + (time/2*mass)*(f*Math.sin(angle) + f_new*Math.sin(angle))
+    a_new = angle
+    @vx = @vx + (time/2*mass)*(f*Math.cos(a_new) + f_new*Math.cos(a_new))
+    @vy = @vy + (time/2*mass)*(f*Math.sin(a_new) + f_new*Math.sin(a_new))
   end
 
   def force
-    G * mass * SUN_MASS / position.distance_to(Point.new(0, 0))
+    G * mass * SUN_MASS / (position.distance_to_origin**2)
   end
 
   def angle

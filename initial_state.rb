@@ -12,10 +12,12 @@ def generate_planets
   particles.add(sun)
 
   planets_mass = SUN_MASS / N.to_f
+  angular_momentum = -0.1
 
   N.times do
     position = random_position
-    new_particle = Planet.new(R, planets_mass, position, 5, 1)
+    velocity = initial_velocity(angular_momentum, position, planets_mass)
+    new_particle = Planet.new(R, planets_mass, position, velocity.x, velocity.y)
     particles.add(new_particle)
   end
 
@@ -29,6 +31,17 @@ def random_position
   x = random_distance * Math.cos(random_angle)
   y = random_distance * Math.sin(random_angle)
   return Point.new(x, y)
+end
+
+def initial_velocity(angular_momentum, position, mass)
+  v = angular_momentum / (position.distance_to_origin * mass)
+
+  cos = Math.cos(Math::PI / 2)
+  sin = Math.sin(Math::PI / 2)
+  tangent = Point.new(cos * position.x - sin * position.y, sin * position.x - cos * position.y)
+  tangent.multiply(1.0 / tangent.distance_to_origin).multiply(v)
+
+  return tangent
 end
 
 =begin
