@@ -9,8 +9,8 @@ class Planet
   @@ids = 0
 
   def initialize(radius, mass, position, vx, vy)
-    @@ids += 1
     @id = @@ids
+    @@ids += 1
     @radius = radius
     @mass = mass
     @position = position
@@ -47,13 +47,22 @@ class Planet
     @neighbors = Set.new
   end
 
+  # Movement made using Velocity-Verlet algorithm
   def move(time)
-    x = @position.x + @vx * time
-    y = @position.y + @vy * time
-    @position = Point.new(x, y)
+    f = force
+    @position.x = @position.x + time * @vx + (time**2/mass) * f * Math.cos(angle)
+    @position.y = @position.y + time * @vy + (time**2/mass) * f * Math.sin(angle)
+
+    f_new = force
+    @vx = @vx + (time/2*mass)*(f*Math.cos(angle) + f_new*Math.cos(angle))
+    @vy = @vy + (time/2*mass)*(f*Math.sin(angle) + f_new*Math.sin(angle))
   end
 
-  def speed
-    Math.sqrt(vx**2 + vy**2)
+  def force
+    G * mass * SUN_MASS / position.distance_to(Point.new(0, 0))
+  end
+
+  def angle
+    Math.atan2(y, x)
   end
 end

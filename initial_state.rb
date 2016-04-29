@@ -15,8 +15,7 @@ def generate_planets
 
   N.times do
     position = random_position
-    velocity = transform_tangential_velocity(5, position)
-    new_particle = Planet.new(R, planets_mass, position, velocity[0], velocity[1])
+    new_particle = Planet.new(R, planets_mass, position, 5, 1)
     particles.add(new_particle)
   end
 
