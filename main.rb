@@ -50,24 +50,24 @@ def print_next_state(planets, mode, second)
   file.write("#{second}\n")
   scale_reduction = MIN_DISTANCE_SUN
   planets.each do |planet|
-    file.write("#{planet.x/scale_reduction} #{planet.y/scale_reduction}\n")
+    file.write("#{planet.x/scale_reduction} #{planet.y/scale_reduction} #{planet.vx/scale_reduction} #{planet.vy/scale_reduction}\n")
   end
-  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction}\n")
-  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction}\n")
-  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction}\n")
-  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction}\n")
+  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
+  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
+  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
+  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
   file.close
 end
 
-N = 100 # Planets Amount at the start
+N = 100 # Planets amount at the start
 R = 0
 SUN_MASS = 2*(10**30)
-G = 6.693*(10**-11)
+G = 6.6741*(10**-11)
 MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
-SIMULATION_DELTA_TIME = 1
-SIMULATION_END_TIME = 5000
+SIMULATION_DELTA_TIME = 20
+SIMULATION_END_TIME = 80000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 
