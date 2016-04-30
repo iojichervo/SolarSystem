@@ -50,6 +50,10 @@ class Planet
     @v[1]
   end
 
+  def angular_momentum
+    @v.magnitude * @mass * @position.magnitude
+  end
+
   def add_neighbor(particle)
     @neighbors.add(particle)
   end
@@ -73,35 +77,33 @@ class Planet
   end
 
   def distance_to(other_planet)
-    (position - other_planet.position).magnitude
+    Math.hypot(x - other_planet.x, y - other_planet.y)
   end
 
-  # WIP
   def collide_with(other_planet)
-    new_mass = @mass + other_planet.mass
-
     # Obtain new position
-    @position.x *= @mass
-    @position.y *= @mass
-
-    other_position = other_planet.position
-    other_position.x *= other_planet.mass
-    other_position.y *= other_planet.mass
-
-    @position.x += other_position.x
-    @position.y += other_position.y
-
-    @position.x /= new_mass
-    @position.y /= new_mass
+    new_pos = (@position * @mass + other_planet.position * other_planet.mass) / (@mass + other_planet.mass)
 
     # Obtain new mass
-    @mass = new_mass
+    new_mass = @mass + other_planet.mass
 
     # Obtain new velocity
-    new_angular_momentum = L + other_position.L
-    new_vel_tan_val = new_angular_momentum / (@mass * @position.distance_to_origin)
+    tangential_module = (angular_momentum + other_planet.angular_momentum) / (@mass * @position.magnitude)
+    tangential_velocity = ((Vector[0, 0] - @position).normalize) * tangential_module
 
-    new_vel_tan = Point.new(-@position.x, -@position.y)
-    new_vel_tan.multiply(1.0 / new_vel_tan.distance_to_origin).multiply(new_vel_tan_val)
+    radial_velocity = (radial * @mass + other_planet.radial * other_planet.mass) / (@mass + other_planet.mass)
+
+    new_vel = tangential_velocity + radial_velocity
+
+    # Asignment
+    @position = new_pos
+    @mass = new_mass
+    @v = new_vel
+  end
+
+  def radial
+    radial_versor = (Vector[0, 0] - @position).normalize
+    q = Vector[radial_versor[0] * @v[0], radial_versor[1] * @v[1]]
+    Vector[radial_versor[0] * q[0], radial_versor[1] * q[1]]
   end
 end

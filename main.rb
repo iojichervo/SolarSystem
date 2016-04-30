@@ -9,7 +9,7 @@ def simulation
 
   actual_time = 0
   while actual_time < SIMULATION_END_TIME do
-#    collapse(planets)
+    collapse(planets)
     move(planets, SIMULATION_DELTA_TIME)
     actual_time += SIMULATION_DELTA_TIME
 
@@ -29,9 +29,10 @@ end
 def collapse(planets)
   planets.each do |planet|
     planets.each do |other_planet|
-      if planet.id != other_planet.id && planet.distance_to(other_planet) < CLOSE_DISTANCE then
+      if planet != other_planet && planet.distance_to(other_planet) < CLOSE_DISTANCE then
         planets.delete(other_planet)
         planet.collide_with(other_planet)
+        puts "#{planet.id} - #{other_planet.id}"
       end
     end
   end
@@ -59,7 +60,7 @@ def print_next_state(planets, mode, second)
   file.close
 end
 
-N = 100 # Planets amount at the start
+N = 1000 # Planets amount at the start
 R = 0
 SUN_MASS = 2*(10**30)
 G = 6.6741*(10**-11)
@@ -67,7 +68,7 @@ MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
 SIMULATION_DELTA_TIME = 20
-SIMULATION_END_TIME = 80000
+SIMULATION_END_TIME = 100000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 

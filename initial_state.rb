@@ -13,7 +13,8 @@ def generate_planets
 
   planets_mass = SUN_MASS / N.to_f
   angular_momentum = get_angular_momentum(planets_mass)
-  puts angular_momentum
+
+  angular_momentum = 1.002 * 10**43
 
   N.times do
     position = random_position
