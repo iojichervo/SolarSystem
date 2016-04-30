@@ -4,19 +4,22 @@ require 'set'
 
 class Planet
   attr_reader :id, :radius, :neighbors, :mass
-  attr_accessor :position, :vx, :vy
+  attr_accessor :position, :v
 
   @@ids = 0
 
-  def initialize(radius, mass, position, vx, vy)
+  def initialize(radius, mass, position, velocity)
     @id = @@ids
     @@ids += 1
     @radius = radius
     @mass = mass
     @position = position
-    @vx = vx
-    @vy = vy
+    @v = velocity
     @neighbors = Set.new
+  end
+
+  def ==(other)
+    self.id == other.id
   end
 
   def eql?(other)
@@ -32,11 +35,19 @@ class Planet
   end
 
   def x
-    @position.x
+    @position[0]
   end
 
   def y
-    @position.y
+    @position[1]
+  end
+
+  def vx
+    @v[0]
+  end
+
+  def vy
+    @v[1]
   end
 
   def add_neighbor(particle)
@@ -50,21 +61,47 @@ class Planet
   # Movement made using Velocity-Verlet algorithm
   def move(time)
     f = force
-    a = angle
-    @position.x = @position.x + time * @vx + (time**2/mass) * f * Math.cos(a)
-    @position.y = @position.y + time * @vy + (time**2/mass) * f * Math.sin(a)
+    @position = @position + time * @v + (time**2/mass) * f
 
     f_new = force
-    a_new = angle
-    @vx = @vx + (time/(2*mass))*(f*Math.cos(a) + f_new*Math.cos(a_new))
-    @vy = @vy + (time/(2*mass))*(f*Math.sin(a) + f_new*Math.sin(a_new))
+    @v = @v + (time / (2*mass)) * (f + f_new)
   end
 
+  # Gravitational force
   def force
-    G * mass * SUN_MASS / (position.distance_to_origin**2)
+    @position.normalize * (-G * mass * SUN_MASS / (@position.magnitude**2))
   end
 
-  def angle
-    Math.atan2(y, x)
+  def distance_to(other_planet)
+    (position - other_planet.position).magnitude
+  end
+
+  # WIP
+  def collide_with(other_planet)
+    new_mass = @mass + other_planet.mass
+
+    # Obtain new position
+    @position.x *= @mass
+    @position.y *= @mass
+
+    other_position = other_planet.position
+    other_position.x *= other_planet.mass
+    other_position.y *= other_planet.mass
+
+    @position.x += other_position.x
+    @position.y += other_position.y
+
+    @position.x /= new_mass
+    @position.y /= new_mass
+
+    # Obtain new mass
+    @mass = new_mass
+
+    # Obtain new velocity
+    new_angular_momentum = L + other_position.L
+    new_vel_tan_val = new_angular_momentum / (@mass * @position.distance_to_origin)
+
+    new_vel_tan = Point.new(-@position.x, -@position.y)
+    new_vel_tan.multiply(1.0 / new_vel_tan.distance_to_origin).multiply(new_vel_tan_val)
   end
 end
