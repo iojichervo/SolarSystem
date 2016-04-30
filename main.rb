@@ -1,14 +1,18 @@
 #!/usr/bin/env ruby
 
 require './initial_state.rb'
+require './cell_index_method.rb'
 require 'matrix'
 
 def simulation
   planets = generate_planets
+  m = 10**4 - 1
+  state = State.new(MAX_DISTANCE_SUN, MAX_DISTANCE_SUN / m.to_f, planets.size, planets)
   print_next_state(planets, 'w', 0)
 
   actual_time = 0
   while actual_time < SIMULATION_END_TIME do
+    cim_main(state, m, CLOSE_DISTANCE)
     collapse(planets)
     move(planets, SIMULATION_DELTA_TIME)
     actual_time += SIMULATION_DELTA_TIME
@@ -28,11 +32,10 @@ end
 
 def collapse(planets)
   planets.each do |planet|
-    planets.each do |other_planet|
+    planet.neighbors.each do |other_planet|
       if planet != other_planet && planet.distance_to(other_planet) < CLOSE_DISTANCE then
         planets.delete(other_planet)
         planet.collide_with(other_planet)
-        puts "#{planet.id} - #{other_planet.id}"
       end
     end
   end
