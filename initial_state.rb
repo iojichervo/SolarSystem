@@ -12,7 +12,8 @@ def generate_planets
   particles.add(sun)
 
   planets_mass = SUN_MASS / N.to_f
-  angular_momentum = -(10**43)
+  angular_momentum = get_angular_momentum(planets_mass)
+  puts angular_momentum
 
   N.times do
     position = random_position
@@ -22,6 +23,14 @@ def generate_planets
   end
 
   return particles
+end
+
+def get_angular_momentum(mass)
+  μ = (mass * SUN_MASS) / (mass + SUN_MASS)
+  energy = -10**30
+  r = MIN_DISTANCE_SUN * 1.005
+  f = (G * mass * SUN_MASS) / r
+  return Math.sqrt(2 * μ * r**2 * (energy + f))
 end
 
 # Return a new position for a new planet
