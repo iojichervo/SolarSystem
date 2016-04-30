@@ -26,7 +26,7 @@ end
 
 def get_angular_momentum(mass)
   μ = (mass * SUN_MASS) / (mass + SUN_MASS)
-  energy = -10**30
+  energy =  -N * 10**20
   r = MIN_DISTANCE_SUN * 1.005
   f = (G * mass * SUN_MASS) / r
   return Math.sqrt(2 * μ * r**2 * (energy + f))
