@@ -106,4 +106,12 @@ class Planet
     q = Vector[radial_versor[0] * @v[0], radial_versor[1] * @v[1]]
     Vector[radial_versor[0] * q[0], radial_versor[1] * q[1]]
   end
+
+  def potential_energy
+    - G * @mass * SUN_MASS / @position.magnitude
+  end
+
+  def cinetic_energy
+    0.5 * @mass * @v.magnitude**2
+  end
 end

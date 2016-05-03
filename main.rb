@@ -12,8 +12,9 @@ def simulation
 
   actual_time = 0
   while actual_time < SIMULATION_END_TIME do
-    cim_main(state, m, CLOSE_DISTANCE)
-    collapse(planets)
+    #cim_main(state, m, CLOSE_DISTANCE)
+    #collapse(planets)
+    calculate_energy(planets)
     move(planets, SIMULATION_DELTA_TIME)
     actual_time += SIMULATION_DELTA_TIME
 
@@ -41,6 +42,20 @@ def collapse(planets)
   end
 end
 
+def calculate_energy(planets)
+  cin_energy = 0
+  pot_energy = 0
+  planets.each do |p|
+    if p.id != 0 then # Don't add the energy of the sun
+      cin_energy += p.cinetic_energy
+      pot_energy += p.potential_energy
+    end
+  end
+  #puts "Cin: #{cin_energy}"
+  #puts "Pot: #{pot_energy}"
+  puts "Energy: #{pot_energy + cin_energy}"
+end
+
 # Returns the next frame of a certain time
 def next_frame(time)
   return (time.round(1) - time > 0 ? time.round(1) : time.round(1) + FRAME_DELTA_TIME).round(1)
@@ -63,7 +78,7 @@ def print_next_state(planets, mode, second)
   file.close
 end
 
-N = 1000 # Planets amount at the start
+N = 100 # Planets amount at the start
 R = 0
 SUN_MASS = 2*(10**30)
 G = 6.6741*(10**-11)
