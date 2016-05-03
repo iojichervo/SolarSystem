@@ -12,8 +12,8 @@ def simulation
 
   actual_time = 0
   while actual_time < SIMULATION_END_TIME do
-    #cim_main(state, m, CLOSE_DISTANCE)
-    #collapse(planets)
+    cim_main(state, m, CLOSE_DISTANCE)
+    collapse(planets)
     calculate_energy(planets)
     move(planets, SIMULATION_DELTA_TIME)
     actual_time += SIMULATION_DELTA_TIME
@@ -33,10 +33,14 @@ end
 
 def collapse(planets)
   planets.each do |planet|
-    planet.neighbors.each do |other_planet|
-      if planet != other_planet && planet.distance_to(other_planet) < CLOSE_DISTANCE then
-        planets.delete(other_planet)
-        planet.collide_with(other_planet)
+    if planet.id != 0 && planet.distance_to_sun < CLOSE_DISTANCE * 100 then
+      planets.delete(planet)
+    else
+      planet.neighbors.each do |other_planet|
+        if planet != other_planet && planet.distance_to(other_planet) < CLOSE_DISTANCE then
+          planets.delete(other_planet)
+          planet.collide_with(other_planet)
+        end
       end
     end
   end
@@ -53,7 +57,7 @@ def calculate_energy(planets)
   end
   #puts "Cin: #{cin_energy}"
   #puts "Pot: #{pot_energy}"
-  puts "Energy: #{pot_energy + cin_energy}"
+  #puts "Energy: #{pot_energy + cin_energy}"
 end
 
 # Returns the next frame of a certain time
@@ -85,8 +89,8 @@ G = 6.6741*(10**-11)
 MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
-SIMULATION_DELTA_TIME = 20
-SIMULATION_END_TIME = 100000
+SIMULATION_DELTA_TIME = 10
+SIMULATION_END_TIME = 200000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 

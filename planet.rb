@@ -80,7 +80,13 @@ class Planet
     Math.hypot(x - other_planet.x, y - other_planet.y)
   end
 
+  def distance_to_sun
+    Math.hypot(x, y)
+  end
+
   def collide_with(other_planet)
+    return if @id == 0 || other_planet.id == 0
+
     # Obtain new position
     new_pos = (@position * @mass + other_planet.position * other_planet.mass) / (@mass + other_planet.mass)
 
