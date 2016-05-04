@@ -38,7 +38,7 @@ def collapse(planets)
   planets.each do |planet|
     if planet.id != 0 && planet.distance_to_sun < CLOSE_DISTANCE * 100 then
       planets.delete(planet)
-    elsif planet.x > MAX_DISTANCE_SUN || planet.y > MAX_DISTANCE_SUN
+    elsif planet.x > MAX_DISTANCE_SUN || planet.y > MAX_DISTANCE_SUN || planet.x < -MAX_DISTANCE_SUN || planet.y < -MAX_DISTANCE_SUN
       planets.delete(planet)
     else
       planet.neighbors.each do |other_planet|
@@ -104,8 +104,8 @@ G = 6.6741*(10**-11)
 MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
-SIMULATION_DELTA_TIME = 10
-SIMULATION_END_TIME = 10000
+SIMULATION_DELTA_TIME = 20
+SIMULATION_END_TIME = 500000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 
