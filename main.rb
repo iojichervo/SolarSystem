@@ -73,12 +73,12 @@ def print_next_state(planets, mode, second)
   file.write("#{second}\n")
   scale_reduction = MIN_DISTANCE_SUN
   planets.each do |planet|
-    file.write("#{planet.x/scale_reduction} #{planet.y/scale_reduction} #{planet.vx/scale_reduction} #{planet.vy/scale_reduction}\n")
+    file.write("#{planet.x/scale_reduction} #{planet.y/scale_reduction} #{planet.vx/scale_reduction} #{planet.vy/scale_reduction} #{planet.red} #{planet.green} #{planet.blue}\n")
   end
-  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
-  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
-  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
-  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0\n")
+  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0 0 0 0\n")
+  file.write("#{MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0 0 0 0\n")
+  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{MAX_DISTANCE_SUN/scale_reduction} 0 0 0 0 0\n")
+  file.write("#{-MAX_DISTANCE_SUN/scale_reduction} #{-MAX_DISTANCE_SUN/scale_reduction} 0 0 0 0 0\n")
   file.close
 end
 
@@ -90,7 +90,7 @@ MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
 SIMULATION_DELTA_TIME = 10
-SIMULATION_END_TIME = 200000
+SIMULATION_END_TIME = 100000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 

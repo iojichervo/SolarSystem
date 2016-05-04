@@ -84,6 +84,13 @@ class Planet
     Math.hypot(x, y)
   end
 
+  def angle
+    w = Vector[1, 0]
+    angle = Math.atan2(@v[1], @v[0]) - Math.atan2(w[1], w[0])
+    angle += (2*Math::PI) if angle < 0
+    return angle
+  end
+
   def collide_with(other_planet)
     return if @id == 0 || other_planet.id == 0
 
@@ -113,6 +120,7 @@ class Planet
     Vector[radial_versor[0] * q[0], radial_versor[1] * q[1]]
   end
 
+  # Energy methods
   def potential_energy
     - G * @mass * SUN_MASS / @position.magnitude
   end
@@ -120,4 +128,30 @@ class Planet
   def cinetic_energy
     0.5 * @mass * @v.magnitude**2
   end
+
+  # Color methods
+  def red
+    if @id == 0 then
+      255
+    else
+      (2 / Math::PI) * angle - (angle**2 / (Math::PI ** 2))
+    end
+  end
+
+  def green
+    if @id == 0 then
+      255
+    else
+      1 - (angle / (2 * Math::PI))
+    end
+  end
+
+  def blue
+    if @id == 0 then
+      0
+    else
+      (angle / (2 * Math::PI))
+    end
+  end
+
 end
