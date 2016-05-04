@@ -97,15 +97,16 @@ def print_energies(cin, pot)
   file.close
 end
 
-N = 100 # Planets amount at the start
+
+N = ARGV[0].to_i # Planets amount at the start
 R = 0
 SUN_MASS = 2*(10**30)
 G = 6.6741*(10**-11)
 MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
-SIMULATION_DELTA_TIME = 20
-SIMULATION_END_TIME = 500000
+SIMULATION_DELTA_TIME = ARGV[1].to_i
+SIMULATION_END_TIME = ARGV[2].to_i
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 
