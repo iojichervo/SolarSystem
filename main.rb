@@ -7,6 +7,8 @@ require 'matrix'
 def simulation
   planets = generate_planets
   m = 10**4 - 1
+  cin = []
+  pot = []
   state = State.new(MAX_DISTANCE_SUN, MAX_DISTANCE_SUN / m.to_f, planets.size, planets)
   print_next_state(planets, 'w', 0)
 
@@ -14,7 +16,7 @@ def simulation
   while actual_time < SIMULATION_END_TIME do
     cim_main(state, m, CLOSE_DISTANCE)
     collapse(planets)
-    calculate_energy(planets)
+    calculate_energy(planets, cin, pot)
     move(planets, SIMULATION_DELTA_TIME)
     actual_time += SIMULATION_DELTA_TIME
 
@@ -22,6 +24,7 @@ def simulation
       print_next_state(planets, 'a', next_frame(actual_time))
     end
   end
+  print_energies(cin, pot)
 end
 
 # Moves all the planets a certain time
@@ -35,6 +38,8 @@ def collapse(planets)
   planets.each do |planet|
     if planet.id != 0 && planet.distance_to_sun < CLOSE_DISTANCE * 100 then
       planets.delete(planet)
+    elsif planet.x > MAX_DISTANCE_SUN || planet.y > MAX_DISTANCE_SUN
+      planets.delete(planet)
     else
       planet.neighbors.each do |other_planet|
         if planet != other_planet && planet.distance_to(other_planet) < CLOSE_DISTANCE then
@@ -46,7 +51,7 @@ def collapse(planets)
   end
 end
 
-def calculate_energy(planets)
+def calculate_energy(planets, cin, pot)
   cin_energy = 0
   pot_energy = 0
   planets.each do |p|
@@ -55,9 +60,8 @@ def calculate_energy(planets)
       pot_energy += p.potential_energy
     end
   end
-  #puts "Cin: #{cin_energy}"
-  #puts "Pot: #{pot_energy}"
-  #puts "Energy: #{pot_energy + cin_energy}"
+  cin.push(cin_energy)
+  pot.push(pot_energy)
 end
 
 # Returns the next frame of a certain time
@@ -82,6 +86,17 @@ def print_next_state(planets, mode, second)
   file.close
 end
 
+def print_energies(cin, pot)
+  Dir.mkdir("out") unless File.exists?("out")
+  file = File.open("./out/energy.txt", 'w')
+  pot.size.times do |i|
+    c = cin[i]
+    p = pot[i]
+    file.write("#{c} #{p} #{c + p}\n")
+  end
+  file.close
+end
+
 N = 100 # Planets amount at the start
 R = 0
 SUN_MASS = 2*(10**30)
@@ -90,7 +105,7 @@ MAX_DISTANCE_SUN = 10**10
 MIN_DISTANCE_SUN = 10**9
 CLOSE_DISTANCE = 10**6
 SIMULATION_DELTA_TIME = 10
-SIMULATION_END_TIME = 100000
+SIMULATION_END_TIME = 10000
 K = 50
 FRAME_DELTA_TIME = K * SIMULATION_DELTA_TIME
 
